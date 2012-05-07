@@ -109,7 +109,11 @@ sub info {
    if($has_syslog) {
       syslog("info", $msg);
    }
+<<<<<<< HEAD
    else {
+=======
+   elsif(Rex::Config->get_log_filename()) {
+>>>>>>> upstream/master
       open($log_fh, ">>", Rex::Config->get_log_filename()) or die($!);
       flock($log_fh, 2);
       print {$log_fh} "$msg\n" if($log_fh);
@@ -147,7 +151,7 @@ sub debug {
    if($has_syslog) {
       syslog("debug", $msg);
    }
-   elsif($log_fh) {
+   elsif(Rex::Config->get_log_filename()) {
       open($log_fh, ">>", Rex::Config->get_log_filename()) or die($!);
       flock($log_fh, 2);
       print {$log_fh} "$msg\n" if($log_fh);

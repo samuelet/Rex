@@ -54,12 +54,17 @@ use base qw(Rex::Exporter);
 
 @EXPORT = qw(run can_run sudo);
 
-=item run($command)
+=item run($command [, $callback])
 
 This function will execute the given command and returns the output.
 
  task "uptime", "server01", sub {
     say run "uptime";
+    run "uptime", sub {
+       my ($stdout, $stderr) = @_;
+       my $server = Rex::get_current_connection()->{server};
+       say "[$server] $stdout\n";
+    };
  };
 
 =cut
@@ -71,8 +76,8 @@ sub run {
 
    my $exec = Rex::Interface::Exec->create;
    my ($out, $err) = $exec->exec($cmd, $path);
-   chomp $out;
-   chomp $err;
+   chomp $out if $out;
+   chomp $err if $err;
 
    if($code) {
       return &$code($out, $err);
@@ -99,7 +104,7 @@ This function checks if a command is in the path or is available.
 sub can_run {
    my $cmd = shift;
 
-   if($^O =~ m/^MSWin/) {
+   if(! Rex::is_ssh() && $^O =~ m/^MSWin/) {
       return 1;
    }
 
