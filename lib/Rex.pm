@@ -103,7 +103,7 @@ our ( @EXPORT, @CONNECTION_STACK, $GLOBAL_SUDO, $MODULE_PATHS,
 $WITH_EXIT_STATUS = 1; # since 0.50 activated by default
 @FEATURE_FLAGS    = ();
 
-my $cur_dir;
+my $cur_dir = '';
 
 BEGIN {
 
